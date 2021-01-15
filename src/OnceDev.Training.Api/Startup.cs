@@ -30,10 +30,12 @@ namespace OnceDev.Training.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(options =>
+     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+ );
             services.AddTransient<ICustomerRepository, CustomerRepository>()
                     .AddDbContext<NorthwindDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("northwind")));
-
+            services.AddTransient<IOrderRepository, OrderRepository>();
             services.AddMediatR(typeof(GetCustomersHandler).Assembly);
         }
 
